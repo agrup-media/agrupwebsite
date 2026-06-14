@@ -1,10 +1,17 @@
 import type { PageData } from "@/lib/site-data";
-import { RawHtml } from "./RawHtml";
+import { getPageContent } from "@/lib/page-content";
+import { PageContentRenderer } from "./PageContentRenderer";
 
 type SubPageProps = {
   page: PageData;
 };
 
 export function SubPage({ page }: SubPageProps) {
-  return <RawHtml html={page.mainHtml} />;
+  const content = getPageContent(page.slug);
+
+  if (!content) {
+    return null;
+  }
+
+  return <PageContentRenderer node={content} />;
 }

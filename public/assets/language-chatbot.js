@@ -3,7 +3,6 @@
   const SUPPORTED_LANGUAGES = {
     de: { flag: '🇩🇪', label: 'Deutsch', htmlLang: 'de' },
     en: { flag: '🇬🇧', label: 'English', htmlLang: 'en' },
-    tr: { flag: '🇹🇷', label: 'Türkçe', htmlLang: 'tr' }
   };
 
   const translations = {
@@ -71,70 +70,7 @@
       'Automatisierung': 'Automation',
       'WhatsApp': 'WhatsApp'
     },
-    tr: {
-      'Startseite': 'Ana sayfa',
-      'Leistungen': 'Hizmetler',
-      'Projekte': 'Projeler',
-      'Über uns': 'Hakkımızda',
-      'Kontakt': 'İletişim',
-      'Erstgespräch': 'İlk görüşme',
-      'Kostenloses Erstgespräch vereinbaren': 'Ücretsiz ilk görüşme planla',
-      'Kostenloses Erstgespräch': 'Ücretsiz ilk görüşme',
-      'Leistungen ansehen': 'Hizmetleri incele',
-      'Kontakt aufnehmen': 'İletişime geç',
-      'Alle Leistungen': 'Tüm hizmetler',
-      'Mehr von uns': 'Bizden daha fazlası',
-      'Impressum': 'Yasal bilgiler',
-      'Datenschutz': 'Gizlilik',
-      'Cookie-Einstellungen': 'Çerez ayarları',
-      'Bereit für mehr Anfragen?': 'Daha fazla talebe hazır mısınız?',
-      'Digitale Auftritte für Unternehmen, die sichtbar werden wollen.': 'Görünür olmak isteyen işletmeler için dijital varlıklar.',
-      'Websites, die aus Besuchern Anfragen machen.': 'Ziyaretçileri taleplere dönüştüren web siteleri.',
-      'Webdesign, KI-Chatbots und digitale Systeme für Unternehmen in Rendsburg, Eckernförde, Kiel und Schleswig-Holstein. Klar gestaltet, technisch sauber und auf echte Anfragen ausgerichtet.': 'Rendsburg, Eckernförde, Kiel ve Schleswig-Holstein’daki işletmeler için web tasarımı, yapay zeka sohbet botları ve dijital sistemler. Net tasarım, sağlam teknik yapı ve gerçek taleplere odaklanma.',
-      'Hochwertige Websites, KI-Chatbots und digitale Systeme für Unternehmen in Schleswig-Holstein.': 'Schleswig-Holstein’daki işletmeler için kaliteli web siteleri, yapay zeka sohbet botları ve dijital sistemler.',
-      'Regional': 'Bölgesel',
-      'Persönlich': 'Kişisel',
-      'Auf Anfragen optimiert': 'Talepler için optimize',
-      'Kurz gesagt': 'Kısaca',
-      'Schön reicht nicht. Die Website muss verkaufen.': 'Güzel görünmek yetmez. Web sitesi satışa yardımcı olmalı.',
-      'Wir gestalten mobile Auftritte so, dass Besucher schnell verstehen, euch vertrauen und den nächsten Schritt machen.': 'Mobil deneyimleri, ziyaretçilerin hızlıca anlaması, güvenmesi ve sonraki adımı atması için tasarlıyoruz.',
-      'Klarer erster Eindruck': 'Net ilk izlenim',
-      'In wenigen Sekunden muss erkennbar sein, was ihr anbietet und warum es relevant ist.': 'Ziyaretçiler birkaç saniye içinde ne sunduğunuzu ve neden önemli olduğunu anlamalı.',
-      'Weniger Reibung': 'Daha az engel',
-      'Kürzere Texte, ruhige Abschnitte und klare Wege zu Kontakt, WhatsApp oder Formular.': 'Daha kısa metinler, sakin bölümler ve iletişim, WhatsApp ya da forma net yollar.',
-      'Mehr passende Anfragen': 'Daha uygun talepler',
-      'Webdesign, Chatbot und Kontaktwege arbeiten gemeinsam auf das Erstgespräch hin.': 'Web tasarımı, sohbet botu ve iletişim yolları birlikte ilk görüşmeye yönlendirir.',
-      'Warum AgRup Media': 'Neden AgRup Media',
-      'Nicht einfach nur eine Website. Ein digitaler Auftritt, der ernst genommen wird.': 'Sadece bir web sitesi değil. Ciddiye alınan bir dijital görünüm.',
-      'Hochwertiges Design statt Baukasten-Optik': 'Hazır şablon görünümü yerine kaliteli tasarım',
-      'Klare Struktur statt überladene Seiten': 'Kalabalık sayfalar yerine net yapı',
-      'Durchdachte Systeme statt isolierter Einzelmaßnahmen': 'Tek tek çözümler yerine düşünülmüş sistemler',
-      'Fokus auf Anfragen, Vertrauen und Kontakt': 'Talep, güven ve iletişim odağı',
-      'Unser Ablauf': 'Sürecimiz',
-      'Von der Idee zum sauberen digitalen Auftritt.': 'Fikirden temiz bir dijital görünüme.',
-      'Wir verstehen euer Unternehmen, eure Zielgruppe und das eigentliche Ziel.': 'İşletmenizi, hedef kitlenizi ve asıl hedefinizi anlıyoruz.',
-      'Konzept': 'Konsept',
-      'Wir planen Aufbau, Inhalte, Designrichtung und notwendige Funktionen.': 'Yapıyı, içerikleri, tasarım yönünü ve gerekli işlevleri planlıyoruz.',
-      'Umsetzung': 'Uygulama',
-      'Wir bauen Website, Systeme und Kontaktwege sauber und nutzerfreundlich auf.': 'Web sitesini, sistemleri ve iletişim yollarını temiz ve kullanıcı dostu şekilde kuruyoruz.',
-      'Übergabe': 'Teslim',
-      'Ihr bekommt einen digitalen Auftritt, der seriös wirkt und praktisch nutzbar ist.': 'Profesyonel görünen ve pratikte kullanılabilen bir dijital yapı alırsınız.',
-      'Bereit für einen professionellen digitalen Auftritt?': 'Profesyonel bir dijital görünüme hazır mısınız?',
-      'Dann starten wir mit einem klaren Erstgespräch und prüfen, was für euer Unternehmen wirklich Sinn ergibt.': 'Net bir ilk görüşmeyle başlarız ve işletmeniz için gerçekten neyin mantıklı olduğunu değerlendiririz.',
-      'Leistung': 'Hizmet',
-      'Überblick': 'Genel bakış',
-      'Bausteine': 'Parçalar',
-      'Ergebnis': 'Sonuç',
-      'Ablauf': 'Süreç',
-      'Preise': 'Fiyatlar',
-      'Webdesign': 'Web tasarımı',
-      'Chatbots': 'Sohbet botları',
-      'Terminbuchung': 'Randevu alma',
-      'Mediendesign': 'Medya tasarımı',
-      'Online Marketing': 'Online pazarlama',
-      'Automatisierung': 'Otomasyon',
-      'WhatsApp': 'WhatsApp'
-    }
+
   };
 
   const chatbotCopy = {
@@ -238,56 +174,7 @@
         services: 'View services'
       }
     },
-    tr: {
-      title: 'Dijital asistan',
-      close: 'Sohbeti kapat',
-      open: 'Sohbeti aç',
-      input: 'Mesaj yazın...',
-      send: 'Mesaj gönder',
-      typing: 'Asistan yazıyor',
-      privacy: 'Lütfen hassas veri girmeyin. İşleme bilgilerini gizlilik politikamızda bulabilirsiniz.',
-      privacyLink: 'gizlilik politikası',
-      greeting: 'Merhaba, ben AgRup Media’nın dijital asistanıyım. Web siteleri, yapay zeka sohbet botları, randevu sistemleri ve medya tasarımı konusunda yardımcı olabilirim. Size nasıl destek olabilirim?',
-      default: 'Buna net bir cevap bulamadım. Web siteleri, yapay zeka sohbet botları, randevu sistemi, medya tasarımı, fiyatlar, süreç, gizlilik ve iletişim konularında yardımcı olabilirim.',
-      legal: 'Hukuki veya vergi danışmanlığı veremem. Genel bilgiler yasal bilgiler ve gizlilik sayfasında yer alır. Somut hukuki sorular için lütfen uzman bir kişiye başvurun.',
-      privacyAnswer: 'Kişisel verilerin işlenmesine ilişkin bilgileri gizlilik politikamızda bulabilirsiniz. Lütfen sohbete hassas veya gizli veri girmeyin.',
-      cookieAnswer: 'İstatistik ve pazarlama araçları yalnızca aktif onaydan sonra yüklenir. Seçiminizi footer’daki çerez ayarlarından her zaman değiştirebilirsiniz.',
-      contact: 'Tabii. İlk görüşme için en hızlı yol WhatsApp. Alternatif olarak iletişim formunu kullanıp ihtiyacınızı kısaca anlatabilirsiniz.',
-      price: 'Bu, kapsamına bağlıdır. Basit bir landing page, çok sayfalı web sitesi, randevu sistemi veya chatbot içeren daha büyük bir projeden farklı hesaplanır. Projenizi daha iyi değerlendirmek için birkaç kısa soruyu cevaplamak ister misiniz?',
-      time: 'Bu kapsama bağlıdır. Küçük bir landing page genelde çok sayfalı, randevu sistemli veya chatbotlu bir web sitesinden daha hızlı tamamlanır. Birkaç bilgiyle süreyi daha iyi tahmin edebiliriz.',
-      process: 'Sürecimiz nettir: ilk görüşme, konsept, uygulama ve teslim. İlk görüşmede hedefi, hedef kitleyi, içerikleri ve mantıklı işlevleri netleştiririz.',
-      imprint: 'Yasal bilgileri footer’dan veya buradan açabilirsiniz. Adres, iletişim ve sorumlu kişiler orada yer alır.',
-      what: 'AgRup Media, Rendsburg, Eckernförde, Kiel ve Schleswig-Holstein’daki yerel işletmeler, hizmet sağlayıcılar, serbest çalışanlar ve küçük/orta ölçekli şirketler için web siteleri, yapay zeka sohbet botları, randevu sistemleri, dijital sistemler ve medya tasarımı geliştirir.',
-      restart: 'Sohbeti kısaca yeniden başlatıyorum. Size nasıl yardımcı olabilirim?',
-      complete: summary => 'Harika, en önemli noktaları özetledim:\n\n' + summary + '\n\nBu bilgileri doğrudan WhatsApp ile bize gönderebilir veya iletişim formunu açabilirsiniz.',
-      summaryService: 'Hizmet',
-      whatsappIntro: 'Merhaba AgRup Media, bir proje hakkında bilgi almak istiyorum.',
-      quick: {
-        website: 'Web sitesi iste',
-        websiteMsg: 'Bir web sitesiyle ilgileniyorum.',
-        chatbot: 'Yapay zeka chatbot',
-        chatbotMsg: 'Bir yapay zeka sohbet botuyla ilgileniyorum.',
-        booking: 'Randevu sistemi',
-        bookingMsg: 'Randevu sistemiyle ilgileniyorum.',
-        design: 'Medya tasarımı',
-        designMsg: 'Medya tasarımıyla ilgileniyorum.',
-        prices: 'Fiyatlar',
-        pricesMsg: 'Bir web sitesi ne kadar tutar?',
-        process: 'Süreç',
-        processMsg: 'Süreç nasıl işliyor?',
-        initial: 'İlk görüşme',
-        initialMsg: 'İlk görüşme ayarlamak istiyorum.',
-        form: 'İletişim formu',
-        whatsapp: 'WhatsApp',
-        sendWhatsapp: 'Özeti WhatsApp ile gönder',
-        openForm: 'İletişim formunu aç',
-        estimate: 'Evet, projeyi değerlendir',
-        estimateMsg: 'Evet, projemin değerlendirilmesini istiyorum.',
-        openPrivacy: 'Gizlilik politikası',
-        openImprint: 'Yasal bilgileri aç',
-        services: 'Hizmetleri incele'
-      }
-    }
+
   };
 
   const flowData = {
@@ -353,37 +240,7 @@
         ['contactPreference', 'Contact path', 'How would you prefer to continue - via WhatsApp or the contact form?']
       ]]
     },
-    tr: {
-      websiteLead: ['Web sitesi', [
-        ['businessType', 'Sektör', 'Tabii. Web sitesi hangi sektör veya işletme için düşünülüyor?'],
-        ['hasWebsite', 'Mevcut web sitesi', 'Zaten bir web siteniz var mı, yoksa tamamen yeni mi hazırlanmalı?'],
-        ['projectScope', 'Kapsam', 'Daha çok onepager mı, klasik şirket web sitesi mi, yoksa daha büyük bir proje mi?'],
-        ['features', 'İşlevler', 'Hangi işlevler önemli? Örneğin iletişim formu, WhatsApp bağlantısı, randevu sistemi, chatbot veya Google optimizasyonu.'],
-        ['startTime', 'Başlangıç', 'Proje yaklaşık ne zaman başlamalı? Hemen, önümüzdeki haftalarda veya daha sonra?'],
-        ['contactPreference', 'İletişim yolu', 'Nasıl devam etmek istersiniz - WhatsApp ile mi yoksa iletişim formuyla mı?']
-      ]],
-      chatbotLead: ['Yapay zeka chatbot', [
-        ['businessType', 'Web sitesi/işletme', 'Chatbot hangi web sitesi veya işletme için kullanılacak?'],
-        ['projectScope', 'Görev', 'Chatbot esas olarak ne yapmalı? Sık soruları cevaplamak, lead toplamak, randevu hazırlamak veya müşterilere danışmanlık vermek?'],
-        ['hasWebsite', 'Mevcut web sitesi', 'Chatbotun entegre edileceği mevcut bir web siteniz var mı?'],
-        ['features', 'Seviye', 'Chatbot basit mi başlamalı, yoksa uzun vadede gerçek yapay zeka/API ile genişletilmeli mi?'],
-        ['contactPreference', 'İletişim yolu', 'Nasıl devam etmek istersiniz - WhatsApp ile mi yoksa iletişim formuyla mı?']
-      ]],
-      bookingLead: ['Randevu sistemi', [
-        ['businessType', 'Randevu türü', 'Hangi tür randevular için bir rezervasyon sistemine ihtiyacınız var?'],
-        ['projectScope', 'Rezervasyon yolu', 'Müşteriler doğrudan online randevu mu almalı, yoksa önce talep mi göndermeli?'],
-        ['features', 'Çerçeve', 'Sabit çalışma saatleri, birden fazla çalışan veya farklı hizmetler var mı?'],
-        ['hasWebsite', 'Entegrasyon', 'Randevu sistemi mevcut bir web sitesine mi entegre edilmeli?'],
-        ['contactPreference', 'İletişim yolu', 'Nasıl devam etmek istersiniz - WhatsApp ile mi yoksa iletişim formuyla mı?']
-      ]],
-      designLead: ['Medya tasarımı', [
-        ['projectScope', 'İhtiyaç', 'Medya tasarımı alanında tam olarak neye ihtiyacınız var? Logo, sosyal medya tasarımı, broşür, kartvizit veya reklam materyali?'],
-        ['hasWebsite', 'Mevcut tasarım', 'Mevcut bir tasarım var mı, yoksa yeni bir şey mi geliştirilmeli?'],
-        ['features', 'Kullanım', 'Tasarım ne için kullanılacak? Online, baskı veya ikisi birden?'],
-        ['startTime', 'Gereken zaman', 'Tasarım yaklaşık ne zaman gerekli?'],
-        ['contactPreference', 'İletişim yolu', 'Nasıl devam etmek istersiniz - WhatsApp ile mi yoksa iletişim formuyla mı?']
-      ]]
-    }
+
   };
 
   let currentLanguage = getSavedLanguage();
@@ -454,7 +311,7 @@
     });
 
     document.querySelectorAll('.language-toggle').forEach(toggle => {
-      toggle.setAttribute('aria-label', lang === 'de' ? 'Sprache wechseln' : lang === 'tr' ? 'Dili değiştir' : 'Change language');
+      toggle.setAttribute('aria-label', lang === 'de' ? 'Sprache wechseln' : 'Change language');
     });
 
     document.querySelectorAll('.language-menu').forEach(menu => {
@@ -723,7 +580,7 @@
     const activeLeadModes = ['websiteLead', 'chatbotLead', 'bookingLead', 'designLead'];
     const leadMode = detectLeadMode(message);
 
-    if (includesAny(message, ['recht', 'legal', 'tax', 'steuer', 'vertrag', 'agb', 'hukuk', 'vergi', 'sözleşme', 'sozlesme'])) {
+    if (includesAny(message, ['recht', 'legal', 'tax', 'steuer', 'vertrag', 'agb'])) {
       queuedActions = [
         { label: c.quick.openImprint, url: urls.imprint, type: 'link' },
         { label: c.quick.openPrivacy, url: urls.privacy, type: 'link' },
@@ -732,15 +589,15 @@
       return c.legal;
     }
 
-    if (includesAny(message, ['datenschutz', 'privacy', 'daten', 'cookie', 'cookies', 'tracking', 'analytics', 'gizlilik', 'veri', 'çerez', 'cerez'])) {
+    if (includesAny(message, ['datenschutz', 'privacy', 'daten', 'cookie', 'cookies', 'tracking', 'analytics'])) {
       queuedActions = [{ label: c.quick.openPrivacy, url: urls.privacy, type: 'link' }, ...getDefaultActions().slice(0, 3)];
-      return includesAny(message, ['cookie', 'cookies', 'çerez', 'cerez']) ? c.cookieAnswer : c.privacyAnswer;
+      return includesAny(message, ['cookie', 'cookies']) ? c.cookieAnswer : c.privacyAnswer;
     }
 
     if (activeLeadModes.includes(chatbotState.mode)) return handleLeadAnswer(rawMessage);
 
     if (chatbotState.mode === 'priceQualification') {
-      if (includesAny(message, ['ja', 'yes', 'evet', 'estimate', 'einschatzen', 'değerlendir', 'degerlendir'])) return startLeadFlow('websiteLead');
+      if (includesAny(message, ['ja', 'yes', 'estimate', 'einschatzen'])) return startLeadFlow('websiteLead');
       chatbotState.mode = 'idle';
     }
 
@@ -877,7 +734,8 @@
         fresh.toggle.setAttribute('aria-label', isOpen ? getCopy().close : getCopy().open);
         fresh.toggle.setAttribute('aria-expanded', String(isOpen));
         fresh.toggle.tabIndex = isOpen ? -1 : 0;
-        if (isOpen) setTimeout(() => getChatbotElements().input?.focus(), 80);
+        const shouldFocusInput = window.innerWidth > 768 && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+        if (isOpen && shouldFocusInput) setTimeout(() => getChatbotElements().input?.focus(), 80);
       });
     }
     if (fresh.close && fresh.toggle) {
@@ -896,7 +754,16 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function ready(callback) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', callback, { once: true });
+      return;
+    }
+
+    callback();
+  }
+
+  ready(() => {
     ensureLanguageSwitchers();
     collectTextNodes();
     bindLanguageSwitchers();

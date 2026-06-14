@@ -1,10 +1,17 @@
 import type { PageData } from "@/lib/site-data";
-import { RawHtml } from "./RawHtml";
+import { getPageContent } from "@/lib/page-content";
+import { PageContentRenderer } from "./PageContentRenderer";
 
 type ProjectsProps = {
   page: PageData;
 };
 
 export function Projects({ page }: ProjectsProps) {
-  return <RawHtml html={page.mainHtml} />;
+  const content = getPageContent(page.slug);
+
+  if (!content) {
+    return null;
+  }
+
+  return <PageContentRenderer node={content} />;
 }
