@@ -1,0 +1,127 @@
+.header {
+  z-index: 10000 !important;
+  overflow: visible !important;
+  isolation: isolate;
+}
+
+.nav,
+.nav-language-switcher,
+.language-switcher {
+  overflow: visible !important;
+}
+
+.nav-language-switcher,
+.language-switcher {
+  position: relative;
+  z-index: 10020 !important;
+}
+
+.language-switcher.is-open {
+  z-index: 10030 !important;
+}
+
+.language-menu {
+  display: grid;
+  gap: 6px;
+  min-width: 132px !important;
+  border-radius: 18px !important;
+  z-index: 10040 !important;
+  pointer-events: none;
+}
+
+.language-switcher.is-open .language-menu {
+  pointer-events: auto;
+}
+
+.language-option {
+  width: 100% !important;
+  height: 38px !important;
+  grid-template-columns: 24px 1fr;
+  justify-items: start;
+  gap: 8px;
+  padding: 0 10px !important;
+  border-radius: 999px !important;
+  color: rgba(255, 255, 255, .88);
+  font-size: 13px !important;
+  font-weight: 850;
+  text-align: left;
+}
+
+.language-option.is-active {
+  background: rgba(242, 200, 121, .16) !important;
+  color: #f2c879;
+}
+
+.language-option__flag {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.language-option__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chatbot-action.is-wide {
+  flex-basis: 100%;
+}
+
+.chatbot-action.is-primary {
+  border-color: rgba(242, 200, 121, .72);
+  color: #080808;
+  background: linear-gradient(135deg, #f2c879, #c89542);
+}
+
+.chatbot-privacy {
+  margin: 0;
+  padding: 0 18px 12px;
+  color: rgba(255, 255, 255, .52);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.chatbot-privacy a {
+  color: #f2c879;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.chatbot-typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chatbot-typing-dots {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.chatbot-typing-dots span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .5;
+  animation: chatbotTypingPulse 1s infinite ease-in-out;
+}
+
+.chatbot-typing-dots span:nth-child(2) { animation-delay: .14s; }
+.chatbot-typing-dots span:nth-child(3) { animation-delay: .28s; }
+
+@keyframes chatbotTypingPulse {
+  0%, 80%, 100% { transform: translateY(0); opacity: .35; }
+  40% { transform: translateY(-3px); opacity: .9; }
+}
+
+@media (max-width: 700px) {
+  .nav-language-switcher {
+    display: block !important;
+    margin-left: auto;
+  }
+
+  .nav-language-switcher + .btn {
+    margin-left: 0 !important;
+  }
+}

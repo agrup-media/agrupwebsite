@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Inside AgRup Folge 1 Platzhalter</title>
+  <desc id="desc">Dunkles AgRup Media Podcast-Thumbnail als Platzhalter fuer Folge 1.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#17110a"/>
+      <stop offset="0.48" stop-color="#050505"/>
+      <stop offset="1" stop-color="#111"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f2c879"/>
+      <stop offset="1" stop-color="#c89542"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="22" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.95 0 1 0 0 0.65 0 0 1 0 0.25 0 0 0 0.55 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="1000" cy="105" r="210" fill="#c89542" opacity=".13"/>
+  <circle cx="150" cy="590" r="250" fill="#f2c879" opacity=".09"/>
+  <path d="M720 0 485 675h120L840 0z" fill="#fff" opacity=".035"/>
+  <rect x="58" y="58" width="1084" height="559" rx="44" fill="#050505" opacity=".42" stroke="#c89542" stroke-opacity=".45" stroke-width="2"/>
+  <g filter="url(#glow)">
+    <rect x="82" y="82" width="96" height="96" rx="28" fill="#c89542" fill-opacity=".12" stroke="#f2c879" stroke-opacity=".62" stroke-width="2"/>
+    <path d="M130 109c-15 0-27 12-27 27v28h16v-28c0-6 5-11 11-11s11 5 11 11v28h16v-28c0-15-12-27-27-27z" fill="url(#gold)"/>
+    <path d="M116 173h28" stroke="#f2c879" stroke-width="9" stroke-linecap="round"/>
+  </g>
+  <text x="82" y="280" fill="#fff" font-family="Inter, Arial, sans-serif" font-size="78" font-weight="900" letter-spacing="-2">Inside AgRup</text>
+  <text x="86" y="338" fill="#f2c879" font-family="Inter, Arial, sans-serif" font-size="26" font-weight="800" letter-spacing="5">PODCAST</text>
+  <text x="86" y="425" fill="#d8d8d8" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700">Folge 1</text>
+  <text x="86" y="472" fill="#a8a8a8" font-family="Inter, Arial, sans-serif" font-size="24">AgRup Media</text>
+</svg>
