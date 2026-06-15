@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de">
+    <html lang="de" data-scroll-behavior="smooth">
       <body>
         <div className="site">
           <Header />

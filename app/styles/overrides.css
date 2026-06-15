@@ -1882,3 +1882,79 @@ body:has(#home) .hero::after {
     pointer-events: none !important;
   }
 }
+
+.language-switcher.is-open .language-menu,
+.language-switcher.is-open .language-option {
+  visibility: visible !important;
+}
+
+.site > .header .nav-language-switcher {
+  position: relative !important;
+  z-index: 200060 !important;
+}
+
+.site > .header .nav-language-switcher .language-menu {
+  z-index: 200070 !important;
+}
+
+/* Final mobile background lock */
+@media (max-width: 768px) {
+  html,
+  body {
+    min-height: 100%;
+    background: #000 !important;
+    overflow-x: hidden;
+  }
+
+  body {
+    position: relative;
+  }
+
+  body::before {
+    content: "" !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, .22), rgba(0, 0, 0, .46)),
+      url("/assets/page-stars-mobile.png") center top / cover no-repeat !important;
+    transform: translateZ(0);
+  }
+
+  .site {
+    position: relative !important;
+    z-index: 1 !important;
+    isolation: auto !important;
+    background: transparent !important;
+    overflow-x: clip !important;
+  }
+
+  .site::before,
+  .site::after {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+  }
+
+  body:has(#home) .hero::before,
+  body:has(#home) .hero-art::before {
+    background-image: url("/assets/hero-mountain-stars-mobile.png") !important;
+    background-size: cover !important;
+    background-position: center top !important;
+    background-attachment: scroll !important;
+  }
+
+  body:has(#home) .hero-art::before {
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 1 !important;
+  }
+}
+
+@media (min-width: 769px) {
+  body::before {
+    content: none !important;
+  }
+}

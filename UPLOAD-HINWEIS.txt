@@ -1,0 +1,20 @@
+Diese Dateien bei GitHub an exakt denselben Pfaden ersetzen:
+
+app/layout.tsx
+app/styles/overrides.css
+components/SiteScripts.tsx
+public/assets/language-chatbot.js
+public/assets/translation-data.js
+public/sitemap.xml
+
+Nicht hochladen:
+node_modules
+.next
+dist
+build
+out
+.DS_Store
+lokale .env-Dateien
+Cache- oder Logdateien
+
+Nach dem Upload in GitHub bitte bei Vercel pruefen, ob automatisch ein neuer Deploy gestartet wurde.

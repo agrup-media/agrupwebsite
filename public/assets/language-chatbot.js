@@ -73,6 +73,8 @@
 
   };
 
+  translations.en = Object.assign({}, window.AGRUP_TRANSLATIONS_EN || {}, translations.en);
+
   const chatbotCopy = {
     de: {
       title: 'Digitaler Assistent',
@@ -245,6 +247,10 @@
 
   let currentLanguage = getSavedLanguage();
   let originalTextNodes = [];
+  let originalElementAttrs = [];
+  const textNodeOriginals = new WeakMap();
+  const elementAttrOriginals = new WeakMap();
+  let languageRefreshTimer = null;
   let chatbotState = { mode: 'idle', step: 0, service: '', lead: {} };
   let queuedActions = null;
   let typingElement = null;
@@ -267,8 +273,9 @@
     return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ß/g, 'ss');
   }
 
-  function translateText(value, lang) {
+  function translateText(value, lang, override) {
     if (lang === 'de') return value;
+    if (override) return override;
     const normalized = normalizeText(value);
     const leading = String(value).match(/^\s*/)?.[0] || '';
     const trailing = String(value).match(/\s*$/)?.[0] || '';
@@ -283,15 +290,53 @@
       acceptNode(node) {
         if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
         const parent = node.parentElement;
-        if (!parent || parent.closest('script, style, [data-chatbot], .language-switcher, .cookie-consent, .cookie-modal')) {
+        if (!parent || parent.closest('script, style, [data-chatbot], .language-switcher')) {
           return NodeFilter.FILTER_REJECT;
         }
         return NodeFilter.FILTER_ACCEPT;
       }
     });
     while (walker.nextNode()) {
-      originalTextNodes.push({ node: walker.currentNode, de: walker.currentNode.nodeValue });
+      if (!textNodeOriginals.has(walker.currentNode)) {
+        textNodeOriginals.set(walker.currentNode, walker.currentNode.nodeValue);
+      }
+      originalTextNodes.push({ node: walker.currentNode, de: textNodeOriginals.get(walker.currentNode) });
     }
+  }
+
+  function collectElementAttrs() {
+    originalElementAttrs = [];
+    document.querySelectorAll('[placeholder], [aria-label], [title]').forEach(element => {
+      if (element.closest('script, style, [data-chatbot], .language-switcher')) return;
+      const originals = elementAttrOriginals.get(element) || {};
+      ['placeholder', 'aria-label', 'title'].forEach(attr => {
+        if (!element.hasAttribute(attr)) return;
+        if (!Object.prototype.hasOwnProperty.call(originals, attr)) {
+          originals[attr] = element.getAttribute(attr);
+        }
+        originalElementAttrs.push({ element, attr, de: originals[attr] });
+      });
+      elementAttrOriginals.set(element, originals);
+    });
+  }
+
+  function translatePageContent() {
+    originalTextNodes.forEach(item => {
+      const parent = item.node.parentElement;
+      const override = parent?.getAttribute('data-i18n-en');
+      item.node.nodeValue = translateText(item.de, currentLanguage, override);
+    });
+
+    originalElementAttrs.forEach(item => {
+      item.element.setAttribute(item.attr, translateText(item.de, currentLanguage));
+    });
+  }
+
+  function refreshPageLanguage() {
+    collectTextNodes();
+    collectElementAttrs();
+    translatePageContent();
+    renderLanguageMenus(currentLanguage);
   }
 
   function ensureLanguageSwitchers() {
@@ -334,12 +379,30 @@
     document.documentElement.lang = SUPPORTED_LANGUAGES[currentLanguage].htmlLang;
     window.localStorage.setItem(LANGUAGE_KEY, currentLanguage);
 
-    originalTextNodes.forEach(item => {
-      item.node.nodeValue = translateText(item.de, currentLanguage);
-    });
-
-    renderLanguageMenus(currentLanguage);
+    refreshPageLanguage();
     applyChatbotLanguage();
+  }
+
+  function scheduleLanguageRefresh() {
+    window.clearTimeout(languageRefreshTimer);
+    languageRefreshTimer = window.setTimeout(refreshPageLanguage, 80);
+  }
+
+  function observePageChanges() {
+    if (!('MutationObserver' in window)) return;
+    const target = document.querySelector('.site') || document.body;
+    const observer = new MutationObserver(mutations => {
+      if (
+        mutations.some(mutation =>
+          Array.from(mutation.addedNodes).some(node => node.nodeType === Node.ELEMENT_NODE)
+        )
+      ) {
+        scheduleLanguageRefresh();
+      }
+    });
+    observer.observe(target, { childList: true, subtree: true });
+    window.addEventListener('popstate', scheduleLanguageRefresh);
+    window.addEventListener('agrup:route-change', scheduleLanguageRefresh);
   }
 
   function bindLanguageSwitchers() {
@@ -765,9 +828,10 @@
 
   ready(() => {
     ensureLanguageSwitchers();
-    collectTextNodes();
+    refreshPageLanguage();
     bindLanguageSwitchers();
     initChatbot();
+    observePageChanges();
     applyLanguage(getSavedLanguage());
   });
 }());
