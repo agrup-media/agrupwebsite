@@ -1,33 +1,26 @@
-# AgRup Media Website
+# GitHub Austausch Dateien
 
-Aktuelle Next.js-Version der AgRup-Media-Website.
+## Welche Dateien geaendert wurden
 
-## Lokal starten
+- `src/components/sections/ServicesSection.tsx`
+  - Text beim Kinderhaarschnitt von `bis 12 Jahre` auf `bis 9 Jahre` geaendert.
 
-```bash
-npm install
-npm run dev
-```
+## Welche Dateien neu erstellt wurden
 
-Danach im Browser öffnen:
+- Keine neuen technischen Projektdateien wurden erstellt.
+- Nur dieser Austausch-Ordner `GITHUB_AUSTAUSCH_DATEIEN` wurde lokal neu angelegt.
 
-```text
-http://localhost:3000
-```
+## Welche Dateien ich bei GitHub ersetzen muss
 
-## Vor dem Hochladen prüfen
+- `src/app/layout.tsx`
+  - Diese Datei ersetzt den GitHub-Stand, der offenbar noch einen fehlerhaften Import wie `@/components/SiteScripts` enthaelt.
+- `src/components/sections/ServicesSection.tsx`
+  - Diese Datei enthaelt die korrigierte Altersangabe `bis 9 Jahre`.
 
-```bash
-npm run lint
-npm run build
-```
+## Welche Dateien ich bei GitHub neu hinzufuegen muss
 
-## Wichtig für GitHub
+- Keine.
 
-Diese Ordner nicht hochladen:
+## Build-Status
 
-- `node_modules`
-- `.next`
-- `out`
-
-Sie werden durch `.gitignore` ausgeschlossen und bei Bedarf lokal neu erzeugt.
+- `npm run build` war erfolgreich.
