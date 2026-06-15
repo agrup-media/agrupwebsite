@@ -5,7 +5,7 @@ export function SiteScripts() {
     <>
       <Script src="/assets/consent.js" strategy="afterInteractive" />
       <Script src="/assets/translation-data.js?v=1" strategy="afterInteractive" />
-      <Script src="/assets/language-chatbot.js?v=5" strategy="afterInteractive" />
+      <Script src="/assets/language-chatbot.js?v=6" strategy="afterInteractive" />
       <Script src="/site-interactions.js?v=14" strategy="afterInteractive" />
     </>
   );

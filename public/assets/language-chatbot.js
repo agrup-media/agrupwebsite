@@ -422,19 +422,35 @@
     });
 
     document.addEventListener('click', event => {
-      const option = event.target.closest('.language-option');
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target) return;
+
+      const option = target.closest('.language-option');
       if (option) {
+        event.preventDefault();
+        event.stopPropagation();
         applyLanguage(option.dataset.lang || 'de');
         document.querySelectorAll('.language-switcher').forEach(switcher => switcher.classList.remove('is-open'));
         document.querySelectorAll('.language-toggle').forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));
         return;
       }
 
-      if (!event.target.closest('.language-switcher')) {
+      const clickedSwitcher = target.closest('.language-switcher');
+      const hasOpenSwitcher = document.querySelector('.language-switcher.is-open');
+
+      if (hasOpenSwitcher && !clickedSwitcher) {
+        event.preventDefault();
+        event.stopPropagation();
+        document.querySelectorAll('.language-switcher').forEach(switcher => switcher.classList.remove('is-open'));
+        document.querySelectorAll('.language-toggle').forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));
+        return;
+      }
+
+      if (!clickedSwitcher) {
         document.querySelectorAll('.language-switcher').forEach(switcher => switcher.classList.remove('is-open'));
         document.querySelectorAll('.language-toggle').forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));
       }
-    });
+    }, true);
   }
 
   function getChatbotElements() {

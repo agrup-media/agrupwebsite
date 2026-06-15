@@ -1,3 +1,5 @@
+Neuester Austauschstand.
+
 Diese Dateien bei GitHub an exakt denselben Pfaden ersetzen:
 
 app/layout.tsx
@@ -18,3 +20,7 @@ lokale .env-Dateien
 Cache- oder Logdateien
 
 Nach dem Upload in GitHub bitte bei Vercel pruefen, ob automatisch ein neuer Deploy gestartet wurde.
+
+Hinweis:
+Der Ordner github-austausch-20260615 enthaelt nur die Dateien, die du jetzt gezielt bei GitHub ersetzen musst.
+Die ZIP agrupmedia-github-vercel-final-20260615.zip enthaelt den kompletten bereinigten Projektstand fuer GitHub/Vercel.

@@ -4,6 +4,37 @@ body {
   background: #020202 !important;
 }
 
+:root {
+  color-scheme: dark;
+  --agrup-safe-bg: #000;
+  --agrup-page-bg-image: url("/assets/page-stars.png");
+  --agrup-page-bg-position: center center;
+}
+
+html {
+  min-height: 100%;
+  background-color: var(--agrup-safe-bg) !important;
+  background-image: var(--agrup-page-bg-image) !important;
+  background-position: var(--agrup-page-bg-position) !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+body {
+  min-height: 100%;
+  background-color: var(--agrup-safe-bg) !important;
+  overscroll-behavior-y: none;
+}
+
+@supports (height: 100dvh) {
+  html,
+  body,
+  .site {
+    min-height: 100dvh;
+  }
+}
+
 .site {
   position: relative;
   isolation: isolate;
@@ -937,7 +968,9 @@ body:has(#home) .hero::after {
     background: transparent !important;
   }
 
-  .site::before {
+  .site::before,
+  body:has(#home) .site::before,
+  body:not(:has(#home)) .site::before {
     content: "" !important;
     position: fixed !important;
     inset: 0 !important;
@@ -1911,14 +1944,27 @@ body:has(#home) .hero::after {
   }
 
   body::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  .site::before,
+  body:has(#home) .site::before,
+  body:not(:has(#home)) .site::before {
     content: "" !important;
     position: fixed !important;
     inset: 0 !important;
     z-index: 0 !important;
     pointer-events: none !important;
+    display: block !important;
+    opacity: 1 !important;
     background:
-      linear-gradient(180deg, rgba(0, 0, 0, .22), rgba(0, 0, 0, .46)),
-      url("/assets/page-stars-mobile.png") center top / cover no-repeat !important;
+      linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .08)),
+      url("/assets/page-stars-mobile.png") 32% center / cover no-repeat !important;
+    filter: brightness(2.25) saturate(1.28);
+    mix-blend-mode: normal !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
     transform: translateZ(0);
   }
 
@@ -1930,11 +1976,26 @@ body:has(#home) .hero::after {
     overflow-x: clip !important;
   }
 
-  .site::before,
   .site::after {
     content: none !important;
     display: none !important;
     background: none !important;
+  }
+
+  .site > * {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  #home .mobile-sales .container {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  #home .mobile-sales-item {
+    background: linear-gradient(135deg, rgba(8, 12, 18, .38), rgba(0, 0, 0, .18)) !important;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
   }
 
   body:has(#home) .hero::before,
@@ -1957,4 +2018,120 @@ body:has(#home) .hero::after {
   body::before {
     content: none !important;
   }
+}
+
+/* Device safe-area background fill */
+html,
+body {
+  background-color: #000 !important;
+}
+
+html {
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, .16), rgba(0, 0, 0, .28)),
+    url("/assets/page-stars.png") !important;
+  background-position: center center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+.site::before {
+  top: calc(-1 * env(safe-area-inset-top, 0px)) !important;
+  right: calc(-1 * env(safe-area-inset-right, 0px)) !important;
+  bottom: calc(-1 * env(safe-area-inset-bottom, 0px)) !important;
+  left: calc(-1 * env(safe-area-inset-left, 0px)) !important;
+}
+
+@supports (padding-top: env(safe-area-inset-top)) {
+  .header {
+    padding-top: env(safe-area-inset-top, 0px);
+    background-color: rgba(0, 0, 0, .94);
+  }
+}
+
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  :root {
+    --agrup-page-bg-image: url("/assets/page-stars-mobile.png");
+    --agrup-page-bg-position: 32% center;
+  }
+
+  html {
+    background-image:
+      linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .08)),
+      url("/assets/page-stars-mobile.png") !important;
+    background-position: 32% center !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+  }
+
+  body {
+    background: #000 !important;
+  }
+
+  .site::before,
+  body:has(#home) .site::before,
+  body:not(:has(#home)) .site::before {
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .08)),
+      url("/assets/page-stars-mobile.png") 32% center / cover no-repeat !important;
+  }
+
+  body:has(#home) .hero::before,
+  body:has(#home) .hero-art::before {
+    background-image: url("/assets/hero-mountain-stars-mobile.png") !important;
+    background-size: cover !important;
+    background-position: center top !important;
+  }
+}
+
+@media (min-width: 769px) and (hover: hover) and (pointer: fine) {
+  :root {
+    --agrup-page-bg-image: url("/assets/page-stars.png");
+    --agrup-page-bg-position: center center;
+  }
+
+  html {
+    background-image:
+      linear-gradient(180deg, rgba(0, 0, 0, .16), rgba(0, 0, 0, .28)),
+      url("/assets/page-stars.png") !important;
+    background-position: center center !important;
+    background-size: cover !important;
+  }
+}
+
+/* Language dropdown click shield */
+.language-switcher {
+  isolation: isolate;
+}
+
+.language-switcher.is-open {
+  z-index: 300000 !important;
+}
+
+.language-switcher.is-open .language-toggle,
+.language-switcher.is-open .language-menu {
+  pointer-events: auto !important;
+}
+
+.language-switcher.is-open .language-menu {
+  background: rgba(0, 0, 0, .96) !important;
+  border-color: rgba(242, 200, 121, .34) !important;
+  box-shadow: 0 22px 55px rgba(0, 0, 0, .72), 0 0 0 1px rgba(255, 255, 255, .08) inset !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 300010 !important;
+}
+
+.language-switcher.is-open .language-option {
+  pointer-events: auto !important;
+  background: rgba(255, 255, 255, .09) !important;
+}
+
+.language-switcher.is-open .language-option:hover,
+.language-switcher.is-open .language-option:focus-visible {
+  background: rgba(242, 200, 121, .20) !important;
 }
