@@ -73,7 +73,7 @@ window.AGRUP_TRANSLATIONS_EN = {
   "KI-Chatbots für Websites in Rendsburg, Eckernförde und Umgebung": "AI chatbots for websites in Rendsburg, Eckernförde and the surrounding area",
   "Ein KI-Chatbot ersetzt keine persönliche Beratung. Er kann aber Orientierung geben, einfache Fragen beantworten und Anfragen besser vorbereiten.": "An AI chatbot does not replace personal advice. However, he can provide orientation, answer simple questions and prepare inquiries better.",
   "Schnellere Antworten auf typische Fragen": "Faster answers to typical questions",
-  "Nutzen": "To use",
+  "Nutzen": "Benefit",
   "Anfragen": "Enquiries",
   "Chatbot für Website": "Chatbot for website",
   "Digitale Assistenten mit Grenzen": "Digital assistants with limitations",
@@ -213,7 +213,7 @@ window.AGRUP_TRANSLATIONS_EN = {
   "Meldorfweg 14": "Meldorfweg 14",
   "Antworten auf häufige Fragen": "Answers to frequently asked questions",
   "Digitale Assistenz für eure Website": "Digital assistance for your website",
-  "Georg Ruppel": "George Ruppel",
+  "Georg Ruppel": "Georg Ruppel",
   "Vertreten durch die Gesellschafter": "Represented by the shareholders",
   "Ein KI-Chatbot unterstützt Besucher direkt auf der Website, erklärt Angebote und beantwortet wiederkehrende Fragen, ohne den persönlichen Kontakt zu ersetzen.": "An AI chatbot supports visitors directly on the website, explains offers and answers recurring questions without replacing personal contact.",
   "Vorbereitung von Anfragen": "Preparation of inquiries",
@@ -697,5 +697,12 @@ window.AGRUP_TRANSLATIONS_EN = {
   "Websites, die aus Besuchern Anfragen machen.": "Websites that turn visitors into enquiries.",
   "Preise": "Prices",
   "Willkommen bei AgRup Media.": "Welcome to AgRup Media.",
-  "Deinem Partner für digitale Lösungen.": "Your partner for digital solutions."
+  "Deinem Partner für digitale Lösungen.": "Your partner for digital solutions.",
+  "AgRup Media auf Instagram": "AgRup Media on Instagram",
+  "AgRup Media auf TikTok": "AgRup Media on TikTok",
+  "AgRup Media auf LinkedIn": "AgRup Media on LinkedIn",
+  "AgRup Media auf Facebook": "AgRup Media on Facebook",
+  "Gehört Kriminalität inzwischen zur Tagesordnung?": "Has crime become part of everyday life?",
+  "Sind wir bald alle Kryptomillionäre?": "Will we all be crypto millionaires soon?",
+  "Das Dilemma um Social Media": "The social media dilemma"
 };

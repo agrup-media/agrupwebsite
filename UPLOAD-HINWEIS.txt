@@ -1,4 +1,4 @@
-Neuester Austauschstand.
+Neuester Austauschstand nach Hintergrund-, Responsive-, Sprachumschalter- und Übersetzungsprüfung.
 
 Diese Dateien bei GitHub an exakt denselben Pfaden ersetzen:
 
@@ -24,3 +24,9 @@ Nach dem Upload in GitHub bitte bei Vercel pruefen, ob automatisch ein neuer Dep
 Hinweis:
 Der Ordner github-austausch-20260615 enthaelt nur die Dateien, die du jetzt gezielt bei GitHub ersetzen musst.
 Die ZIP agrupmedia-github-vercel-final-20260615.zip enthaelt den kompletten bereinigten Projektstand fuer GitHub/Vercel.
+
+Hintergrundbilder:
+Mobile Seiten-Hintergrund: public/assets/page-stars-mobile.png
+Desktop Seiten-Hintergrund: public/assets/page-stars.png
+Mobile Hero-Bild: public/assets/hero-mountain-stars-mobile.png
+Desktop Hero-Bild: public/assets/hero-mountain-stars.png
