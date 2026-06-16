@@ -206,11 +206,9 @@
     const panel = document.querySelector("[data-podcast-panel]");
     const timeline = document.querySelector("[data-podcast-timeline]");
 
-    if (!podcastModule || !toggle || !panel || !timeline || timeline.dataset.rendered === "true") return;
+    if (!podcastModule || !toggle || !panel || !timeline) return;
 
-    timeline.dataset.rendered = "true";
-    panel.inert = true;
-    timeline.innerHTML = "";
+    panel.inert = panel.getAttribute("aria-hidden") !== "false";
 
     function syncPodcastPanelHeight() {
       if (podcastModule.classList.contains("is-open")) {
@@ -218,86 +216,94 @@
       }
     }
 
-    podcastEpisodes
-      .slice()
-      .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
-      .forEach((episode, index) => {
-        const item = document.createElement("li");
-        const panelId = "inside-agrup-episode-" + index;
-        item.className = "podcast-episode";
+    if (timeline.dataset.rendered !== "true") {
+      timeline.dataset.rendered = "true";
+      timeline.innerHTML = "";
 
-        const button = document.createElement("button");
-        button.className = "episode-toggle";
-        button.type = "button";
-        button.setAttribute("aria-expanded", "false");
-        button.setAttribute("aria-controls", panelId);
+      podcastEpisodes
+        .slice()
+        .sort((a, b) => new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime())
+        .forEach((episode, index) => {
+          const item = document.createElement("li");
+          const panelId = "inside-agrup-episode-" + index;
+          item.className = "podcast-episode";
 
-        const episodeLabel = document.createElement("span");
-        episodeLabel.className = "episode-label";
-        episodeLabel.textContent = episode.episode;
+          const button = document.createElement("button");
+          button.className = "episode-toggle";
+          button.type = "button";
+          button.setAttribute("aria-expanded", "false");
+          button.setAttribute("aria-controls", panelId);
 
-        const meta = document.createElement("span");
-        meta.className = "episode-meta";
+          const episodeLabel = document.createElement("span");
+          episodeLabel.className = "episode-label";
+          episodeLabel.textContent = episode.episode;
 
-        const title = document.createElement("span");
-        title.className = "episode-title";
-        title.textContent = episode.title;
-        meta.appendChild(title);
+          const meta = document.createElement("span");
+          meta.className = "episode-meta";
 
-        const formattedDate = formatEpisodeDate(episode.date);
-        if (formattedDate) {
-          const date = document.createElement("span");
-          date.className = "episode-date";
-          date.textContent = formattedDate;
-          meta.appendChild(date);
-        }
+          const title = document.createElement("span");
+          title.className = "episode-title";
+          title.textContent = episode.title;
+          meta.appendChild(title);
 
-        const chevron = document.createElement("span");
-        chevron.className = "episode-chevron";
-        chevron.setAttribute("aria-hidden", "true");
-        chevron.textContent = "↓";
+          const formattedDate = formatEpisodeDate(episode.date);
+          if (formattedDate) {
+            const date = document.createElement("span");
+            date.className = "episode-date";
+            date.textContent = formattedDate;
+            meta.appendChild(date);
+          }
 
-        button.append(episodeLabel, meta, chevron);
+          const chevron = document.createElement("span");
+          chevron.className = "episode-chevron";
+          chevron.setAttribute("aria-hidden", "true");
+          chevron.textContent = "↓";
 
-        const episodePanel = document.createElement("div");
-        episodePanel.className = "episode-panel";
-        episodePanel.id = panelId;
-        episodePanel.setAttribute("aria-hidden", "true");
-        episodePanel.inert = true;
+          button.append(episodeLabel, meta, chevron);
 
-        const clip = document.createElement("div");
-        clip.className = "episode-panel-clip";
+          const episodePanel = document.createElement("div");
+          episodePanel.className = "episode-panel";
+          episodePanel.id = panelId;
+          episodePanel.setAttribute("aria-hidden", "true");
+          episodePanel.inert = true;
 
-        const content = document.createElement("div");
-        content.className = "episode-content";
+          const clip = document.createElement("div");
+          clip.className = "episode-panel-clip";
 
-        const image = document.createElement("img");
-        image.className = "episode-thumb";
-        image.src = episode.thumbnail;
-        image.alt = episode.alt;
-        image.loading = "lazy";
+          const content = document.createElement("div");
+          content.className = "episode-content";
 
-        const copy = document.createElement("div");
-        copy.className = "episode-description";
+          const image = document.createElement("img");
+          image.className = "episode-thumb";
+          image.src = episode.thumbnail;
+          image.alt = episode.alt;
+          image.loading = "lazy";
 
-        const description = document.createElement("p");
-        description.textContent = episode.description;
-        copy.appendChild(description);
+          const copy = document.createElement("div");
+          copy.className = "episode-description";
 
-        content.append(image, copy);
-        clip.appendChild(content);
-        episodePanel.appendChild(clip);
-        item.append(button, episodePanel);
-        timeline.appendChild(item);
+          const description = document.createElement("p");
+          description.textContent = episode.description;
+          copy.appendChild(description);
 
-        button.addEventListener("click", () => {
-          const shouldOpen = !item.classList.contains("is-active");
-          timeline.querySelectorAll(".podcast-episode").forEach((otherItem) => setEpisodeOpen(otherItem, false));
-          if (shouldOpen) setEpisodeOpen(item, true);
-          requestAnimationFrame(syncPodcastPanelHeight);
-          window.setTimeout(syncPodcastPanelHeight, 380);
+          content.append(image, copy);
+          clip.appendChild(content);
+          episodePanel.appendChild(clip);
+          item.append(button, episodePanel);
+          timeline.appendChild(item);
+
+          button.addEventListener("click", () => {
+            const shouldOpen = !item.classList.contains("is-active");
+            timeline.querySelectorAll(".podcast-episode").forEach((otherItem) => setEpisodeOpen(otherItem, false));
+            if (shouldOpen) setEpisodeOpen(item, true);
+            requestAnimationFrame(syncPodcastPanelHeight);
+            window.setTimeout(syncPodcastPanelHeight, 380);
+          });
         });
-      });
+    }
+
+    if (toggle.dataset.bound === "true") return;
+    toggle.dataset.bound = "true";
 
     toggle.addEventListener("click", () => {
       const shouldOpen = toggle.getAttribute("aria-expanded") !== "true";

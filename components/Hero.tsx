@@ -48,12 +48,6 @@ export function Hero() {
               Leistungen ansehen
             </Link>
           </div>
-
-          <div className="mobile-hero-trust" aria-label="AgRup Media Vorteile">
-            <span>Regional</span>
-            <span>Persönlich</span>
-            <span>Auf Anfragen optimiert</span>
-          </div>
         </div>
       </div>
     </section>

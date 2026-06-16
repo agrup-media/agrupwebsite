@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const serviceLinks = [
   { href: "/webdesign", label: "Webdesign" },
@@ -15,17 +15,27 @@ const serviceLinks = [
 
 export function Header() {
   const [servicesOpen, setServicesOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function canUseHover() {
     return typeof window !== "undefined" && window.matchMedia("(hover: hover) and (pointer: fine)").matches;
   }
 
   function openOnHover() {
-    if (canUseHover()) setServicesOpen(true);
+    if (!canUseHover()) return;
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+    setServicesOpen(true);
   }
 
   function closeOnHoverEnd() {
-    if (canUseHover()) setServicesOpen(false);
+    if (!canUseHover()) return;
+    closeTimer.current = setTimeout(() => {
+      setServicesOpen(false);
+      closeTimer.current = null;
+    }, 180);
   }
 
   return (
@@ -43,14 +53,21 @@ export function Header() {
         </Link>
 
         <div className="nav-links">
-          <Link href="/">Startseite</Link>
+          <Link href="/" onMouseEnter={() => setServicesOpen(false)}>
+            Startseite
+          </Link>
           <div
             className={`nav-dropdown${servicesOpen ? " is-open" : ""}`}
             data-nav-dropdown
-            onMouseEnter={openOnHover}
             onMouseLeave={closeOnHoverEnd}
           >
-            <Link href="/leistungen" className="nav-dropdown-link" onClick={() => setServicesOpen(false)}>
+            <Link
+              href="/leistungen"
+              className="nav-dropdown-link"
+              onMouseEnter={openOnHover}
+              onFocus={openOnHover}
+              onClick={() => setServicesOpen(false)}
+            >
               Leistungen
             </Link>
             <button
@@ -59,6 +76,8 @@ export function Header() {
               aria-haspopup="true"
               aria-expanded={servicesOpen}
               aria-label="Leistungen Menü öffnen"
+              onMouseEnter={openOnHover}
+              onFocus={openOnHover}
               onClick={() => setServicesOpen((open) => !open)}
             >
               ▾
@@ -71,9 +90,15 @@ export function Header() {
               ))}
             </div>
           </div>
-          <Link href="/projekte">Projekte</Link>
-          <Link href="/ueber-uns">Über uns</Link>
-          <Link href="/kontakt">Kontakt</Link>
+          <Link href="/projekte" onMouseEnter={() => setServicesOpen(false)}>
+            Projekte
+          </Link>
+          <Link href="/ueber-uns" onMouseEnter={() => setServicesOpen(false)}>
+            Über uns
+          </Link>
+          <Link href="/kontakt" onMouseEnter={() => setServicesOpen(false)}>
+            Kontakt
+          </Link>
         </div>
 
         <div className="language-switcher nav-language-switcher">
