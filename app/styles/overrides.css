@@ -2525,12 +2525,26 @@ html {
 }
 
 /* Language dropdown click shield */
+.site > .header,
+.header {
+  z-index: 500000 !important;
+  overflow: visible !important;
+}
+
+.site > .header .nav {
+  position: relative !important;
+  z-index: 500010 !important;
+  overflow: visible !important;
+}
+
 .language-switcher {
+  position: relative !important;
+  z-index: 500020 !important;
   isolation: isolate;
 }
 
 .language-switcher.is-open {
-  z-index: 300000 !important;
+  z-index: 500040 !important;
 }
 
 .language-switcher.is-open .language-toggle,
@@ -2539,6 +2553,7 @@ html {
 }
 
 .language-switcher.is-open .language-menu {
+  position: absolute !important;
   background: rgba(0, 0, 0, .96) !important;
   border-color: rgba(242, 200, 121, .34) !important;
   box-shadow: 0 22px 55px rgba(0, 0, 0, .72), 0 0 0 1px rgba(255, 255, 255, .08) inset !important;
@@ -2546,7 +2561,7 @@ html {
   backdrop-filter: blur(16px);
   opacity: 1 !important;
   visibility: visible !important;
-  z-index: 300010 !important;
+  z-index: 500050 !important;
 }
 
 .language-switcher.is-open .language-option {
@@ -3171,7 +3186,7 @@ html {
 
 .project-timeline-marker {
   position: relative !important;
-  z-index: 2 !important;
+  z-index: 3 !important;
   display: grid !important;
   grid-column: 2 !important;
   grid-row: 1 !important;
@@ -3195,6 +3210,8 @@ html {
 }
 
 .project-timeline-card {
+  position: relative !important;
+  z-index: 2 !important;
   width: min(100%, 390px) !important;
   padding: 22px !important;
   border: 1px solid rgba(242, 200, 121, .34) !important;
@@ -3624,21 +3641,52 @@ html {
 @keyframes projectTimelineIn {
   from {
     opacity: 0;
-    transform: translateY(18px);
+    max-height: 0;
+    transform: translateY(-10px);
   }
 
   to {
     opacity: 1;
+    max-height: 12000px;
     transform: translateY(0);
   }
 }
 
+@keyframes projectTimelineOut {
+  from {
+    opacity: 1;
+    max-height: 12000px;
+    transform: translateY(0);
+  }
+
+  to {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    transform: translateY(-12px);
+  }
+}
+
 .project-timeline {
-  animation: projectTimelineIn .24s cubic-bezier(.2, .8, .2, 1) both !important;
+  overflow: hidden !important;
+  transform-origin: top center !important;
+  will-change: max-height, opacity, transform !important;
+  animation: projectTimelineIn .5s cubic-bezier(.2, .8, .2, 1) both !important;
+}
+
+.project-timeline.is-closing {
+  pointer-events: none !important;
+  animation: projectTimelineOut .42s cubic-bezier(.4, 0, .2, 1) both !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .project-timeline {
+    animation: none !important;
+  }
+
+  .project-timeline.is-closing {
     animation: none !important;
   }
 }
@@ -3802,12 +3850,10 @@ html {
 @keyframes timelineCardReveal {
   from {
     opacity: 0;
-    transform: translateY(18px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
@@ -3833,6 +3879,7 @@ html {
 }
 
 .project-timeline.is-scroll-driven .project-timeline-list::before {
+  z-index: 0 !important;
   top: 0 !important;
   bottom: 0 !important;
   width: 1px !important;
@@ -3843,7 +3890,7 @@ html {
 
 .project-timeline.is-scroll-driven .project-timeline-list::after {
   top: calc(var(--timeline-progress) * 100%) !important;
-  z-index: 4 !important;
+  z-index: 1 !important;
   width: 15px !important;
   height: 15px !important;
   border: 2px solid rgba(255, 255, 255, .92) !important;
@@ -3853,7 +3900,13 @@ html {
     0 0 0 7px rgba(145, 206, 255, .13),
     0 0 24px rgba(255, 255, 255, .8),
     0 0 38px rgba(242, 200, 121, .3) !important;
-  transition: top .12s linear !important;
+  opacity: 1 !important;
+  transition: none !important;
+}
+
+.project-timeline.is-scroll-driven.is-complete .project-timeline-list::after {
+  opacity: 0 !important;
+  transform: translateX(-50%) scale(.7) !important;
 }
 
 .project-timeline.is-scroll-driven .project-timeline-marker {
@@ -3869,14 +3922,24 @@ html {
 
 .project-timeline.is-scroll-driven .project-timeline-card {
   opacity: 0 !important;
-  transform: translateY(18px) !important;
+  transform: translateX(0) scaleX(.76) !important;
   transition:
-    opacity .26s ease,
-    transform .26s ease,
+    opacity .34s ease,
+    transform .38s cubic-bezier(.2, .8, .2, 1),
     border-color .24s ease,
     box-shadow .24s ease,
     background .24s ease !important;
   will-change: opacity, transform !important;
+}
+
+.project-timeline.is-scroll-driven .project-timeline-item:nth-child(odd) .project-timeline-card {
+  transform: translateX(34px) scaleX(.72) !important;
+  transform-origin: right center !important;
+}
+
+.project-timeline.is-scroll-driven .project-timeline-item:nth-child(even) .project-timeline-card {
+  transform: translateX(-34px) scaleX(.72) !important;
+  transform-origin: left center !important;
 }
 
 .project-timeline.is-scroll-driven .project-timeline-item.is-active .project-timeline-marker {
@@ -3899,8 +3962,8 @@ html {
 
 .project-timeline.is-scroll-driven .project-timeline-item.is-active .project-timeline-card {
   opacity: 1 !important;
-  transform: translateY(0) !important;
-  animation: timelineCardReveal .28s ease-out both !important;
+  transform: translateX(0) scaleX(1) !important;
+  animation: timelineCardReveal .38s ease-out both !important;
 }
 
 @media (max-width: 768px) {
@@ -3913,6 +3976,20 @@ html {
   .project-timeline.is-scroll-driven .project-timeline-list::after {
     width: 13px !important;
     height: 13px !important;
+  }
+
+  .project-timeline.is-scroll-driven.is-complete .project-timeline-list::after {
+    transform: translateX(-50%) scale(.7) !important;
+  }
+
+  .project-timeline.is-scroll-driven .project-timeline-item:nth-child(odd) .project-timeline-card,
+  .project-timeline.is-scroll-driven .project-timeline-item:nth-child(even) .project-timeline-card {
+    transform: translateX(-22px) scaleX(.78) !important;
+    transform-origin: left center !important;
+  }
+
+  .project-timeline.is-scroll-driven .project-timeline-item.is-active .project-timeline-card {
+    transform: translateX(0) scaleX(1) !important;
   }
 }
 
@@ -3929,5 +4006,64 @@ html {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+  }
+}
+
+/* Final language menu click priority */
+.site > .header,
+.header {
+  z-index: 900000 !important;
+  overflow: visible !important;
+}
+
+.site > .header .nav,
+.site > .header .nav-language-switcher,
+.language-switcher {
+  position: relative !important;
+  z-index: 900010 !important;
+  overflow: visible !important;
+}
+
+.language-switcher.is-open {
+  z-index: 900040 !important;
+}
+
+.language-switcher.is-open .language-menu {
+  z-index: 900050 !important;
+}
+
+body.language-menu-open main,
+body.language-menu-open .project-showcase,
+body:has(.language-switcher.is-open) main,
+body:has(.language-switcher.is-open) .project-showcase {
+  pointer-events: none !important;
+}
+
+body.language-menu-open .site > .header,
+body.language-menu-open .language-switcher,
+body.language-menu-open .language-toggle,
+body.language-menu-open .language-menu,
+body.language-menu-open .language-option,
+body:has(.language-switcher.is-open) .site > .header,
+body:has(.language-switcher.is-open) .language-switcher,
+body:has(.language-switcher.is-open) .language-toggle,
+body:has(.language-switcher.is-open) .language-menu,
+body:has(.language-switcher.is-open) .language-option {
+  pointer-events: auto !important;
+}
+
+/* Hero mountain visibility across all viewport sizes */
+body:has(#home) .hero::before,
+body:has(#home) .hero-art::before {
+  background-position: center bottom !important;
+  background-size: cover !important;
+}
+
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  body:has(#home) .hero::before,
+  body:has(#home) .hero-art::before {
+    background-image: url("/assets/hero-mountain-stars-mobile.png") !important;
+    background-position: center bottom !important;
+    background-size: cover !important;
   }
 }
