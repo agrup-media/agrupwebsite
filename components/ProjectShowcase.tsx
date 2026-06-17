@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { showcaseProjects } from "@/lib/projects";
+import { showcaseProjects, type ShowcaseProject } from "@/lib/projects";
+
+type SupportedLanguage = "de" | "en";
 
 function getWrappedIndex(index: number, length: number) {
   return (index + length) % length;
@@ -12,18 +14,73 @@ function clamp(value: number, min = 0, max = 1) {
   return Math.min(Math.max(value, min), max);
 }
 
+function getStoredLanguage(): SupportedLanguage {
+  if (typeof window === "undefined") return "de";
+  return window.localStorage.getItem("agrup-language") === "en" ? "en" : "de";
+}
+
+function localizeProject(project: ShowcaseProject, language: SupportedLanguage): ShowcaseProject {
+  const translation = language === "en" ? project.translations?.en : undefined;
+
+  if (!translation) return project;
+
+  return {
+    ...project,
+    subtitle: translation.subtitle,
+    timeline: translation.timeline ?? project.timeline
+  };
+}
+
 export function ProjectShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [timelineOpen, setTimelineOpen] = useState(false);
+  const [timelineMounted, setTimelineMounted] = useState(false);
+  const [timelineClosing, setTimelineClosing] = useState(false);
   const [activeTimelineIndex, setActiveTimelineIndex] = useState(-1);
+  const [timelineComplete, setTimelineComplete] = useState(false);
+  const [language, setLanguage] = useState<SupportedLanguage>("de");
   const shouldScrollTimelineRef = useRef(false);
   const timelineRef = useRef<HTMLDivElement | null>(null);
   const timelineListRef = useRef<HTMLOListElement | null>(null);
   const timelineItemsRef = useRef<Array<HTMLLIElement | null>>([]);
+  const timelineProgressRef = useRef(0);
+  const timelineTargetProgressRef = useRef(0);
+  const timelineAnimationFrameRef = useRef(0);
+  const timelineLastFrameTimeRef = useRef(0);
+  const activeTimelineIndexRef = useRef(-1);
+  const timelineCompleteRef = useRef(false);
+  const lastScrollYRef = useRef(0);
+  const lastScrollTimeRef = useRef(0);
+  const scrollBoostRef = useRef(1);
   const projects = showcaseProjects;
   const hasMultipleProjects = projects.length > 1;
-  const activeProject = projects[activeIndex];
+  const activeProject = projects[activeIndex] ? localizeProject(projects[activeIndex], language) : undefined;
   const timelineLength = activeProject?.timeline?.length ?? 0;
+  const copy = language === "en"
+    ? {
+        eyebrow: "Our projects",
+        title: "Completed client projects.",
+        references: "Project references",
+        viewProject: (title: string) => `View ${title}`,
+        previewAlt: (title: string) => `Website preview of ${title}`,
+        timeline: "Project timeline",
+        timelineIntro: "From the first concept to the published website - including photo shoot, domain, hosting and business cards.",
+        changeProject: "Change project",
+        previous: "Previous project",
+        next: "Next project"
+      }
+    : {
+        eyebrow: "Unsere Projekte",
+        title: "Abgeschlossene Kundenprojekte.",
+        references: "Projekt Referenzen",
+        viewProject: (title: string) => `${title} ansehen`,
+        previewAlt: (title: string) => `Website Preview von ${title}`,
+        timeline: "Projektablauf",
+        timelineIntro: "Vom ersten Konzept bis zur veröffentlichten Webseite - inklusive Fotoshooting, Domain, Hosting und Visitenkarten.",
+        changeProject: "Projekt wechseln",
+        previous: "Vorheriges Projekt",
+        next: "Nächstes Projekt"
+      };
 
   const sideCards = useMemo(() => {
     if (!activeProject) return [];
@@ -36,10 +93,10 @@ export function ProjectShowcase() {
     }
 
     return [
-      { project: projects[getWrappedIndex(activeIndex - 1, projects.length)], position: "left", ghost: false },
-      { project: projects[getWrappedIndex(activeIndex + 1, projects.length)], position: "right", ghost: false }
+      { project: localizeProject(projects[getWrappedIndex(activeIndex - 1, projects.length)], language), position: "left", ghost: false },
+      { project: localizeProject(projects[getWrappedIndex(activeIndex + 1, projects.length)], language), position: "right", ghost: false }
     ] as const;
-  }, [activeIndex, activeProject, hasMultipleProjects, projects]);
+  }, [activeIndex, activeProject, hasMultipleProjects, language, projects]);
 
   function showPrevious() {
     setTimelineOpen(false);
@@ -54,10 +111,39 @@ export function ProjectShowcase() {
   }
 
   function toggleTimeline() {
-    setTimelineOpen((open) => {
-      shouldScrollTimelineRef.current = !open;
-      return !open;
-    });
+    if (timelineOpen) {
+      setTimelineOpen(false);
+      setTimelineClosing(true);
+      setActiveTimelineIndex(-1);
+      setTimelineComplete(false);
+      activeTimelineIndexRef.current = -1;
+      timelineCompleteRef.current = false;
+      timelineProgressRef.current = 0;
+      timelineTargetProgressRef.current = 0;
+      timelineLastFrameTimeRef.current = 0;
+      scrollBoostRef.current = 1;
+      timelineRef.current?.style.setProperty("--timeline-progress", "0");
+
+      if (timelineAnimationFrameRef.current) {
+        window.cancelAnimationFrame(timelineAnimationFrameRef.current);
+        timelineAnimationFrameRef.current = 0;
+      }
+
+      window.setTimeout(() => {
+        setTimelineMounted(false);
+        setTimelineClosing(false);
+      }, 420);
+
+      return;
+    }
+
+    setTimelineMounted(true);
+    setTimelineClosing(false);
+    setTimelineOpen(true);
+    lastScrollYRef.current = window.scrollY;
+    lastScrollTimeRef.current = performance.now();
+    scrollBoostRef.current = 1;
+    shouldScrollTimelineRef.current = true;
   }
 
   useEffect(() => {
@@ -77,36 +163,132 @@ export function ProjectShowcase() {
     return () => window.clearTimeout(scrollTimer);
   }, [timelineOpen]);
 
+  const animateTimelineProgress = useCallback(function animateTimelineProgressFrame(timestamp: number) {
+    const timeline = timelineRef.current;
+    const list = timelineListRef.current;
+
+    if (!timeline || !list) {
+      timelineAnimationFrameRef.current = 0;
+      return;
+    }
+
+    const listRect = list.getBoundingClientRect();
+    const listHeight = Math.max(listRect.height, 1);
+    const previousTimestamp = timelineLastFrameTimeRef.current || timestamp;
+    const deltaSeconds = Math.min((timestamp - previousTimestamp) / 1000, 0.05);
+    const basePixelSpeed = window.innerWidth <= 768 ? 360 : 460;
+    scrollBoostRef.current += (1 - scrollBoostRef.current) * 0.08;
+    const pixelSpeed = basePixelSpeed * scrollBoostRef.current;
+    const step = (pixelSpeed * deltaSeconds) / listHeight;
+    const targetProgress = timelineTargetProgressRef.current;
+    const nextProgress = Math.min(targetProgress, timelineProgressRef.current + step);
+
+    timelineLastFrameTimeRef.current = timestamp;
+    timelineProgressRef.current = Math.max(timelineProgressRef.current, nextProgress);
+    timeline.style.setProperty("--timeline-progress", timelineProgressRef.current.toFixed(4));
+
+    const dotY = timelineProgressRef.current * listHeight;
+
+    let nextActiveIndex = -1;
+    timelineItemsRef.current.forEach((item, index) => {
+      const marker = item?.querySelector<HTMLElement>(".project-timeline-marker");
+      if (!marker) return;
+
+      const markerRect = marker.getBoundingClientRect();
+      const markerCenter = markerRect.top + markerRect.height / 2 - listRect.top;
+
+      if (markerCenter <= dotY + 1) {
+        nextActiveIndex = index;
+      }
+    });
+
+    if (nextActiveIndex > activeTimelineIndexRef.current) {
+      activeTimelineIndexRef.current = nextActiveIndex;
+      setActiveTimelineIndex(nextActiveIndex);
+    }
+
+    const isComplete = nextActiveIndex >= timelineLength - 1 && timelineProgressRef.current >= targetProgress - 0.001;
+    if (isComplete !== timelineCompleteRef.current) {
+      timelineCompleteRef.current = isComplete;
+      setTimelineComplete(isComplete);
+    }
+
+    if (timelineProgressRef.current < targetProgress) {
+      timelineAnimationFrameRef.current = window.requestAnimationFrame(animateTimelineProgressFrame);
+      return;
+    }
+
+    timelineAnimationFrameRef.current = 0;
+  }, [timelineLength]);
+
   const updateTimelineProgress = useCallback(() => {
     const timeline = timelineRef.current;
     const list = timelineListRef.current;
     if (!timeline || !list) return;
 
     const listRect = list.getBoundingClientRect();
-    const activationLine = window.innerHeight * 0.54;
-    const progress = clamp((activationLine - listRect.top) / Math.max(listRect.height, 1));
-    timeline.style.setProperty("--timeline-progress", progress.toFixed(4));
+    const listHeight = Math.max(listRect.height, 1);
+    const revealLine = window.innerHeight * 0.92;
+    let nextTargetProgress = timelineTargetProgressRef.current;
+    const now = performance.now();
+    const scrollDelta = Math.max(window.scrollY - lastScrollYRef.current, 0);
+    const timeDelta = Math.max(now - lastScrollTimeRef.current, 16);
+    const scrollVelocity = scrollDelta / timeDelta;
+    const nextBoost = 1 + Math.min(scrollVelocity / 3.2, 0.45);
 
-    let nextActiveIndex = -1;
-    timelineItemsRef.current.forEach((item, index) => {
+    scrollBoostRef.current = Math.max(scrollBoostRef.current, nextBoost);
+    lastScrollYRef.current = window.scrollY;
+    lastScrollTimeRef.current = now;
+
+    timelineItemsRef.current.forEach((item) => {
       if (!item) return;
+
       const rect = item.getBoundingClientRect();
-      if (rect.top + rect.height / 2 <= activationLine) {
-        nextActiveIndex = index;
+      const marker = item.querySelector<HTMLElement>(".project-timeline-marker");
+      const markerRect = marker?.getBoundingClientRect();
+      const isVisibleEnough = rect.top <= revealLine && rect.bottom >= window.innerHeight * 0.08;
+
+      if (isVisibleEnough && markerRect) {
+        const markerCenter = markerRect.top + markerRect.height / 2;
+        const markerProgress = clamp((markerCenter - listRect.top) / listHeight);
+        nextTargetProgress = Math.max(nextTargetProgress, markerProgress);
       }
     });
 
-    setActiveTimelineIndex((current) => Math.max(current, nextActiveIndex));
+    timelineTargetProgressRef.current = Math.max(timelineTargetProgressRef.current, nextTargetProgress);
+
+    if (!timelineAnimationFrameRef.current) {
+      if (timelineCompleteRef.current) {
+        timelineCompleteRef.current = false;
+        setTimelineComplete(false);
+      }
+      timelineLastFrameTimeRef.current = 0;
+      timelineAnimationFrameRef.current = window.requestAnimationFrame(animateTimelineProgress);
+    }
+  }, [animateTimelineProgress]);
+
+  useEffect(() => {
+    const initialLanguageTimer = window.setTimeout(() => {
+      setLanguage(getStoredLanguage());
+    }, 0);
+
+    function handleLanguageChange(event: Event) {
+      const nextLanguage = event instanceof CustomEvent && event.detail?.language === "en" ? "en" : getStoredLanguage();
+      setLanguage(nextLanguage);
+    }
+
+    window.addEventListener("agrup:language-change", handleLanguageChange);
+    window.addEventListener("storage", handleLanguageChange);
+
+    return () => {
+      window.clearTimeout(initialLanguageTimer);
+      window.removeEventListener("agrup:language-change", handleLanguageChange);
+      window.removeEventListener("storage", handleLanguageChange);
+    };
   }, []);
 
   useEffect(() => {
-    setActiveTimelineIndex(-1);
-    timelineItemsRef.current = [];
-  }, [activeIndex]);
-
-  useEffect(() => {
-    if (!timelineOpen) {
-      setActiveTimelineIndex(-1);
+ 	if (!timelineOpen) {
       return;
     }
 
@@ -115,8 +297,12 @@ export function ProjectShowcase() {
 
     if (reduceMotion) {
       timeline?.style.setProperty("--timeline-progress", "1");
-      setActiveTimelineIndex(timelineLength - 1);
-      return;
+      const reduceMotionTimer = window.setTimeout(() => {
+        setActiveTimelineIndex(timelineLength - 1);
+        setTimelineComplete(true);
+      }, 0);
+
+      return () => window.clearTimeout(reduceMotionTimer);
     }
 
     let frame = 0;
@@ -135,6 +321,10 @@ export function ProjectShowcase() {
 
     return () => {
       window.clearTimeout(initialTimer);
+      if (timelineAnimationFrameRef.current) {
+        window.cancelAnimationFrame(timelineAnimationFrameRef.current);
+        timelineAnimationFrameRef.current = 0;
+      }
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
@@ -149,11 +339,11 @@ export function ProjectShowcase() {
     <section className="project-showcase section" aria-labelledby="project-showcase-title">
       <div className="container">
         <div className="project-showcase-head">
-          <div className="label">Unsere Projekte</div>
-          <h2 id="project-showcase-title">Abgeschlossene Kundenprojekte.</h2>
+          <div className="label">{copy.eyebrow}</div>
+          <h2 id="project-showcase-title">{copy.title}</h2>
         </div>
 
-        <div className="project-coverflow" aria-label="Projekt Referenzen">
+        <div className="project-coverflow" aria-label={copy.references}>
           {sideCards.map(({ project, position, ghost }) => (
             <div
               className={`project-coverflow-card is-${position}${ghost ? " is-ghost" : ""}`}
@@ -170,7 +360,7 @@ export function ProjectShowcase() {
               href={activeProject.url}
               target="_blank"
               rel="noreferrer"
-              aria-label={`${activeProject.title} ansehen`}
+              aria-label={copy.viewProject(activeProject.title)}
             >
               <span className="project-browser-bar" aria-hidden="true">
                 <span />
@@ -179,7 +369,7 @@ export function ProjectShowcase() {
               </span>
               <Image
                 src={activeProject.image}
-                alt={`Website Preview von ${activeProject.title}`}
+                alt={copy.previewAlt(activeProject.title)}
                 width={1200}
                 height={688}
                 sizes="(max-width: 768px) 88vw, 58vw"
@@ -192,7 +382,7 @@ export function ProjectShowcase() {
                 href={activeProject.url}
                 target="_blank"
                 rel="noreferrer"
-                aria-label={`${activeProject.title} ansehen`}
+                aria-label={copy.viewProject(activeProject.title)}
               >
                 <strong>{activeProject.title}</strong>
                 <span className="project-card-meta">{activeProject.subtitle}</span>
@@ -205,7 +395,7 @@ export function ProjectShowcase() {
                   aria-expanded={timelineOpen}
                   onClick={toggleTimeline}
                 >
-                  Projektablauf
+                  {copy.timeline}
                   <span aria-hidden="true">{timelineOpen ? "−" : "▾"}</span>
                 </button>
               ) : null}
@@ -214,8 +404,8 @@ export function ProjectShowcase() {
         </div>
 
         {hasMultipleProjects ? (
-          <div className="project-showcase-controls" aria-label="Projekt wechseln">
-            <button type="button" onClick={showPrevious} aria-label="Vorheriges Projekt">
+          <div className="project-showcase-controls" aria-label={copy.changeProject}>
+            <button type="button" onClick={showPrevious} aria-label={copy.previous}>
               ‹
             </button>
             <div className="project-showcase-dots" aria-hidden="true">
@@ -223,22 +413,24 @@ export function ProjectShowcase() {
                 <span className={index === activeIndex ? "is-active" : ""} key={project.title} />
               ))}
             </div>
-            <button type="button" onClick={showNext} aria-label="Nächstes Projekt">
+            <button type="button" onClick={showNext} aria-label={copy.next}>
               ›
             </button>
           </div>
         ) : null}
 
-        {activeProject.timeline?.length && timelineOpen ? (
+        {activeProject.timeline?.length && timelineMounted ? (
           <div
-            className="project-timeline is-scroll-driven"
+            className={`project-timeline is-scroll-driven${timelineComplete ? " is-complete" : ""}${
+              timelineClosing ? " is-closing" : ""
+            }`}
             id="project-timeline"
             aria-labelledby="project-timeline-title"
             ref={timelineRef}
           >
             <div className="project-timeline-head">
-              <h3 id="project-timeline-title">Projektablauf</h3>
-              <p>Vom ersten Konzept bis zur veröffentlichten Webseite - inklusive Fotoshooting, Domain, Hosting und Visitenkarten.</p>
+              <h3 id="project-timeline-title">{copy.timeline}</h3>
+              <p>{copy.timelineIntro}</p>
             </div>
             <ol className="project-timeline-list" ref={timelineListRef}>
               {activeProject.timeline.map((item, index) => (

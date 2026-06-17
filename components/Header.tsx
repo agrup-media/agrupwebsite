@@ -107,9 +107,9 @@ export function Header() {
             <span className="language-arrow">▾</span>
           </button>
           <div className="language-menu" aria-label="Sprachauswahl">
-            <button className="language-option" type="button" data-lang="en" aria-label="English">
+            <a className="language-option" href="?lang=en" data-lang="en" aria-label="English">
               🇬🇧
-            </button>
+            </a>
           </div>
         </div>
 

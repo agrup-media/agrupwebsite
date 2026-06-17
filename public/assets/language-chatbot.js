@@ -257,7 +257,22 @@
   let replyTimer = null;
 
   function getSavedLanguage() {
-    const saved = window.localStorage.getItem(LANGUAGE_KEY);
+    const requested = new URLSearchParams(window.location.search).get('lang');
+    if (SUPPORTED_LANGUAGES[requested]) {
+      try {
+        window.localStorage.setItem(LANGUAGE_KEY, requested);
+      } catch (error) {
+        // Language still applies for the current page when storage is unavailable.
+      }
+      return requested;
+    }
+
+    let saved = 'de';
+    try {
+      saved = window.localStorage.getItem(LANGUAGE_KEY);
+    } catch (error) {
+      saved = 'de';
+    }
     return SUPPORTED_LANGUAGES[saved] ? saved : 'de';
   }
 
@@ -271,6 +286,23 @@
 
   function normalizeSearch(value) {
     return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/ß/g, 'ss');
+  }
+
+  function getLanguageUrl(lang) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', lang);
+    return url.pathname + url.search + url.hash;
+  }
+
+  function navigateToLanguage(lang) {
+    const nextLanguage = SUPPORTED_LANGUAGES[lang] ? lang : 'de';
+    try {
+      window.localStorage.setItem(LANGUAGE_KEY, nextLanguage);
+    } catch (error) {
+      // Navigation still carries the language through the URL.
+    }
+
+    window.location.assign(getLanguageUrl(nextLanguage));
   }
 
   function translateText(value, lang, override) {
@@ -350,6 +382,33 @@
     });
   }
 
+  function setLanguageSwitcherOpen(switcher, open) {
+    if (!switcher) return;
+    switcher.classList.toggle('is-open', open);
+    document.body.classList.toggle('language-menu-open', Boolean(document.querySelector('.language-switcher.is-open')));
+    const menu = switcher.querySelector('.language-menu');
+    if (!menu) return;
+
+    if (open) {
+      menu.style.setProperty('opacity', '1', 'important');
+      menu.style.setProperty('visibility', 'visible', 'important');
+      menu.style.setProperty('transform', 'translateY(0)', 'important');
+      menu.style.setProperty('pointer-events', 'auto', 'important');
+      menu.style.setProperty('z-index', '900050', 'important');
+    } else {
+      menu.style.removeProperty('opacity');
+      menu.style.removeProperty('visibility');
+      menu.style.removeProperty('transform');
+      menu.style.removeProperty('pointer-events');
+      menu.style.removeProperty('z-index');
+    }
+  }
+
+  function closeLanguageSwitchers() {
+    document.querySelectorAll('.language-switcher').forEach(switcher => setLanguageSwitcherOpen(switcher, false));
+    document.querySelectorAll('.language-toggle').forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));
+  }
+
   function renderLanguageMenus(lang) {
     document.querySelectorAll('.current-flag').forEach(flag => {
       flag.textContent = SUPPORTED_LANGUAGES[lang].flag;
@@ -362,13 +421,23 @@
     document.querySelectorAll('.language-menu').forEach(menu => {
       menu.innerHTML = '';
       Object.entries(SUPPORTED_LANGUAGES).forEach(([code, info]) => {
-        const button = document.createElement('button');
+        const button = document.createElement('a');
         button.className = 'language-option';
         if (code === lang) button.classList.add('is-active');
-        button.type = 'button';
+        button.href = getLanguageUrl(code);
         button.dataset.lang = code;
         button.setAttribute('aria-label', info.label);
         button.innerHTML = '<span class="language-option__flag">' + info.flag + '</span><span class="language-option__label">' + info.label + '</span>';
+        button.addEventListener('pointerdown', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          navigateToLanguage(code);
+        });
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          event.stopPropagation();
+          navigateToLanguage(code);
+        });
         menu.appendChild(button);
       });
     });
@@ -377,10 +446,17 @@
   function applyLanguage(lang) {
     currentLanguage = SUPPORTED_LANGUAGES[lang] ? lang : 'de';
     document.documentElement.lang = SUPPORTED_LANGUAGES[currentLanguage].htmlLang;
-    window.localStorage.setItem(LANGUAGE_KEY, currentLanguage);
+    try {
+      window.localStorage.setItem(LANGUAGE_KEY, currentLanguage);
+    } catch (error) {
+      // The visible language can still change for the current page.
+    }
 
     refreshPageLanguage();
     applyChatbotLanguage();
+    window.dispatchEvent(new CustomEvent('agrup:language-change', {
+      detail: { language: currentLanguage }
+    }));
   }
 
   function scheduleLanguageRefresh() {
@@ -407,22 +483,7 @@
 
   function bindLanguageSwitchers() {
     function setSwitcherOpen(switcher, open) {
-      if (!switcher) return;
-      switcher.classList.toggle('is-open', open);
-      const menu = switcher.querySelector('.language-menu');
-      if (!menu) return;
-
-      if (open) {
-        menu.style.setProperty('opacity', '1', 'important');
-        menu.style.setProperty('visibility', 'visible', 'important');
-        menu.style.setProperty('transform', 'translateY(0)', 'important');
-        menu.style.setProperty('pointer-events', 'auto', 'important');
-      } else {
-        menu.style.removeProperty('opacity');
-        menu.style.removeProperty('visibility');
-        menu.style.removeProperty('transform');
-        menu.style.removeProperty('pointer-events');
-      }
+      setLanguageSwitcherOpen(switcher, open);
     }
 
     document.querySelectorAll('.language-toggle').forEach(toggle => {
@@ -447,8 +508,12 @@
 
       const option = target.closest('.language-option');
       if (option) {
-        event.preventDefault();
-        event.stopPropagation();
+        if (option.tagName === 'A') {
+          event.preventDefault();
+          event.stopPropagation();
+          navigateToLanguage(option.dataset.lang || 'de');
+          return;
+        }
         applyLanguage(option.dataset.lang || 'de');
         document.querySelectorAll('.language-switcher').forEach(switcher => setSwitcherOpen(switcher, false));
         document.querySelectorAll('.language-toggle').forEach(toggle => toggle.setAttribute('aria-expanded', 'false'));

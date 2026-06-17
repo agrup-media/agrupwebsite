@@ -8,6 +8,16 @@ export type ShowcaseProject = {
     title: string;
     description: string;
   }[];
+  translations?: {
+    en?: {
+      subtitle: string;
+      timeline?: {
+        label: string;
+        title: string;
+        description: string;
+      }[];
+    };
+  };
 };
 
 export const showcaseProjects: ShowcaseProject[] = [
@@ -68,6 +78,64 @@ export const showcaseProjects: ShowcaseProject[] = [
         description:
           "Nach dem erfolgreichen Launch entschied sich der Kunde zusätzlich für neue Visitenkarten. Wir haben das passende Design erstellt, die Freigabe erhalten und die Bestellung vorbereitet."
       }
-    ]
+    ],
+    translations: {
+      en: {
+        subtitle: "Website for a modern barbershop",
+        timeline: [
+          {
+            label: "Start",
+            title: "New website requested",
+            description:
+              "The client wanted a modern web presence for his barbershop that presents the shop professionally and can go online quickly."
+          },
+          {
+            label: "Day 1-3",
+            title: "Demo version created",
+            description: "Within three days, we built the first demo version of the website."
+          },
+          {
+            label: "Day 3",
+            title: "Concept presented and approved",
+            description: "The demo was presented to the client. He approved the concept on the same day."
+          },
+          {
+            label: "Day 3",
+            title: "On-site photo shoot",
+            description:
+              "Directly after approval, we carried out a photo shoot in the shop to create authentic images for the website."
+          },
+          {
+            label: "Afterwards",
+            title: "Images integrated into the website",
+            description:
+              "The new photos were integrated into the demo version so the web presence feels authentic, high-quality and suited to the barbershop."
+          },
+          {
+            label: "Final check",
+            title: "Final coordination",
+            description: "The client reviewed the updated website and gave final feedback."
+          },
+          {
+            label: "Before launch",
+            title: "Domain and hosting set up",
+            description:
+              "Before publication, we organized the right domain and prepared hosting through AgRup Media."
+          },
+          {
+            label: "Day 6",
+            title: "Website published",
+            description:
+              "After three more days, the website went live - including domain, hosting, technical setup, Google Business Profile and personalized business email."
+          },
+          {
+            label: "After the website launch",
+            title: "Business cards created",
+            description:
+              "After the successful launch, the client also chose new business cards. We created the matching design, received approval and prepared the order."
+          }
+        ]
+      }
+    }
   }
 ];
